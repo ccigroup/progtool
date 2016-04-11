@@ -1,0 +1,17 @@
+Sun 04/10/2016 
+02:53 PM
+
+avrdude: Version 6.0.1, compiled on Apr 15 2015 at 19:59:58
+         Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
+         Copyright (c) 2007-2009 Joerg Wunsch
+
+         System wide configuration file is "C:\WinAVR\bin\avrdude.conf"
+
+         Using Port                    : usb:bus-0:\\.\libusb0-000c--0x1781-0x0c9f
+         Using Programmer              : usbtiny
+avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0001--0x1781-0x0c9f
+avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0002--0x1781-0x0c9f
+avrdude: Error: Could not find USBtiny device (0x1781/0xc9f)
+
+avrdude done.  Thank you.
+
