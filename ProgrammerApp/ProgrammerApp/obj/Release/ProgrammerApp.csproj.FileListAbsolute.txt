@@ -1,0 +1,9 @@
+C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\bin\Release\ProgrammerApp.exe.config
+C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\bin\Release\ProgrammerApp.exe
+C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\bin\Release\ProgrammerApp.pdb
+C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\obj\Release\ProgrammerApp.csprojResolveAssemblyReference.cache
+C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\obj\Release\ProgrammerApp.MainForm.resources
+C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\obj\Release\ProgrammerApp.Properties.Resources.resources
+C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\obj\Release\ProgrammerApp.csproj.GenerateResource.Cache
+C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\obj\Release\ProgrammerApp.exe
+C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\obj\Release\ProgrammerApp.pdb

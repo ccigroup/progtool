@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 
 namespace ProgrammerApp
@@ -14,19 +15,26 @@ namespace ProgrammerApp
         public String status;
         public String message;
         public bool hasBoard;
+        public bool active;
+        public bool hasSuccess;
+
         public USBTinyISP()
         {
             this.id = 0;
             this.status = "";
             this.message = "";
             this.hasBoard = false;
+            this.active = true;
+            this.hasSuccess = false;
         }
         public USBTinyISP(int id)
         {
             this.id = id;
             this.status = "";
-            this.hasBoard = false;
             this.message = "";
+            this.hasBoard = false;
+            this.active = true;
+            this.hasSuccess = false;
         }
 
         public void performBat(String target, String args)
@@ -53,26 +61,65 @@ namespace ProgrammerApp
             process.WaitForExit();
         }
 
+        public bool connected(int rec)
+        {
+            Console.WriteLine("Connection attempt: " + rec);
+            rec--;
+            if (rec > 0)
+            {
+                bool ret = connected();
+                if (ret) return true;
+                else connected(rec--);
+            }
+            return false;
+        }
+
         public bool connected()
         {
+            Console.WriteLine("{0}> check", this.id);
             String root = System.IO.Directory.GetCurrentDirectory();
             String target = root + "\\batches\\check.bat";
             String args = String.Format("{0}", this.id);
             string path = root + String.Format("\\batches\\check_results\\check_results_p{0}.txt", this.id);
-            File.WriteAllText(path, String.Empty);
+            try
+            {
+                File.WriteAllText(path, String.Empty);
+            }
+            catch (Exception) { }
+
             this.performBat(target, args);
+
             if (!File.Exists(path))
             {
                 this.message = "Results Not Found";
             }
             else {
-                while (!IsFileReady(path)) ;
-                string text = System.IO.File.ReadAllText(path);
+                var task = Task.Run(() => IsFileReady(path));
+                string text = "";
+                if (task.Wait(TimeSpan.FromSeconds(5)))
+                {
+                    if (task.Result)
+                    {
+                        text = System.IO.File.ReadAllText(path);
+                    }
+                    else
+                    {
+                        this.message = "File Error: Could not open";
+                        Console.WriteLine(this.message);
+                    }
+                }
+                else
+                {
+                    this.message = "File Error: Timed out";
+                    Console.WriteLine(this.message);
+                }
+                task.Dispose();
+                
 
-                //Console.WriteLine("Contents of WriteText.txt = {0}", text);
+                Console.WriteLine("Contents of WriteText.txt = {0}", text);
                 if (text.IndexOf("Error") != -1)
                 {
-                     this.message = "Programmer not found.";
+                    this.message = "Programmer not found.";
                 }
                 else if (text.IndexOf("initialization failed, rc=-1") != -1)
                 {
@@ -86,7 +133,8 @@ namespace ProgrammerApp
                 }
                 else
                 {
-                    this.message = "...";
+                    this.message = "Error";
+                    return this.connected(3);
                 }
             }
             return false;
@@ -100,18 +148,19 @@ namespace ProgrammerApp
             String args = String.Format("{0} {1}", this.id, path_to_hex);
             string path = root + String.Format("\\batches\\core_results\\core_results_p{0}.txt", this.id);
 
+            while (!this.IsFileReady(path)) ;
             File.WriteAllText(path, String.Empty);
 
             this.performBat(target, args);
 
-            System.Threading.Thread.Sleep(5000);
-            //Console.WriteLine("Core results path:" + path);
+            //System.Threading.Thread.Sleep(5000);
+            Console.WriteLine("Core results path:" + path);
 
             if (File.Exists(path))
             {
                 while (!this.IsFileReady(path)) ;
                 string text = System.IO.File.ReadAllText(path);
-                //Console.WriteLine("Core Results: " + text);
+                Console.WriteLine("Core Results: " + text);
                 if (text.IndexOf("initialization failed, rc=-1") != -1)
                 {
                     this.message = "Board not found.";
@@ -123,6 +172,7 @@ namespace ProgrammerApp
                 else
                 {
                     this.message = "Upload successful";
+                    this.hasSuccess = true;
                     return true;
                 }
             }
@@ -130,31 +180,31 @@ namespace ProgrammerApp
             {
                 Console.WriteLine("Results not Found*");
             }
+            this.hasSuccess = false;
             return false;
         }
 
-        public bool IsFileReady(String sFilename)
-        {
-            // If the file can be opened for exclusive access it means that the file
-            // is no longer locked by another process.
-            try
-            {
-                using (FileStream inputStream = File.Open(sFilename, FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    if (inputStream.Length > 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
 
-                }
-            }
-            catch (Exception)
+        public bool IsFileReady(String path)
+        {
+            while (true)
             {
-                return false;
+                // If the file can be opened for exclusive access it means that the file
+                // is no longer locked by another process.
+                try
+                {
+                    using (FileStream inputStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None))
+                    {
+                        if (inputStream.Length > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    //throw new IOException("Waiting for file");
+                }
             }
         }
     }

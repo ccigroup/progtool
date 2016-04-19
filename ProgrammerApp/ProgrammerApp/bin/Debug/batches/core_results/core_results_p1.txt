@@ -1,5 +1,5 @@
-Sun 04/10/2016 
-02:07 AM
+Tue 04/19/2016 
+09:22 AM
 
 avrdude: Version 6.0.1, compiled on Apr 15 2015 at 19:59:58
          Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
@@ -47,7 +47,7 @@ avrdude: programmer operation not supported
 avrdude: Using SCK period of 10 usec
 avrdude: AVR device initialized and ready to accept instructions
 
-Reading | ################################################## | 100% -0.00s
+Reading | ################################################## | 100% 0.00s
 
 avrdude: Device signature = 0x1e950f
 avrdude: safemode: lfuse reads as FF
@@ -60,7 +60,7 @@ avrdude: Using SCK period of 10 usec
 avrdude: reading input file "C:\Users\mfonk\Desktop\blink.hex"
 avrdude: writing flash (3098 bytes):
 
-Writing | ################################################## | 100% 3.92s
+Writing | ################################################## | 100% 3.83s
 
 avrdude: 3098 bytes of flash written
 avrdude: verifying flash memory against C:\Users\mfonk\Desktop\blink.hex:
@@ -68,7 +68,7 @@ avrdude: load data flash data from input file C:\Users\mfonk\Desktop\blink.hex:
 avrdude: input file C:\Users\mfonk\Desktop\blink.hex contains 3098 bytes
 avrdude: reading on-chip flash data:
 
-Reading | ################################################## | 100% 2.69s
+Reading | ################################################## | 100% 2.71s
 
 avrdude: verifying ...
 avrdude: 3098 bytes of flash verified

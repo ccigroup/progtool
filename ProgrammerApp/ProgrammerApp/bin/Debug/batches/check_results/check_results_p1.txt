@@ -1,5 +1,5 @@
-Sun 04/10/2016 
-02:53 PM
+Tue 04/19/2016 
+09:24 AM
 
 avrdude: Version 6.0.1, compiled on Apr 15 2015 at 19:59:58
          Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
@@ -45,10 +45,19 @@ avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0002--0x
 avrdude: programmer operation not supported
 
 avrdude: Using SCK period of 10 usec
-avrdude: initialization failed, rc=-1
-         Double check connections and try again, or use -F to override
-         this check.
+avrdude: AVR device initialized and ready to accept instructions
 
+Reading | ################################################## | 100% 0.00s
+
+avrdude: Device signature = 0x1e950f
+avrdude: safemode: lfuse reads as FF
+avrdude: safemode: hfuse reads as DA
+avrdude: safemode: efuse reads as 5
+
+avrdude: safemode: lfuse reads as FF
+avrdude: safemode: hfuse reads as DA
+avrdude: safemode: efuse reads as 5
+avrdude: safemode: Fuses OK (H:05, E:DA, L:FF)
 
 avrdude done.  Thank you.
 
