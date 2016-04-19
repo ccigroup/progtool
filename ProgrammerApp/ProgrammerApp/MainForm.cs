@@ -15,7 +15,7 @@ namespace ProgrammerApp
 {
     public partial class MainForm : Form
     {
-        BackgroundWorker progressWorker;
+        public static BackgroundWorker uploadWorker;
 
         public string path_to_hex = "";
         public static int num_of_progs = 2;
@@ -29,11 +29,12 @@ namespace ProgrammerApp
         public MainForm()
         {
             InitializeComponent();
-            progressWorker = new BackgroundWorker();
-            progressWorker.WorkerReportsProgress = true;
-            progressWorker.DoWork += new DoWorkEventHandler(progressWork);
-            progressWorker.ProgressChanged += new ProgressChangedEventHandler(progressReporter);
-            //DriveInfo[] allDrives = DriveInfo.GetDrives();
+            uploadWorker = new BackgroundWorker();
+            uploadWorker.WorkerReportsProgress = true;
+            uploadWorker.ProgressChanged += worker_ProgressChanged;
+            uploadWorker.DoWork += worker_DoWork;
+            uploadWorker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            refreshMenuItem.Click += new EventHandler(connectProgs);
         }
 
         public void reinitializeComponent()
@@ -41,17 +42,12 @@ namespace ProgrammerApp
             this.Controls.Clear();
             InitializeComponent();
             connectProgs();
-        }
-
-        public static void connectProgrammers(int num_of_programmers)
-        {
-
+            Form1_Load(this, null);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            refreshMenuItem.Text = "Refresh";
-            refreshMenuItem.Click += new EventHandler(button1_Click);
+            
             String path = System.IO.Directory.GetCurrentDirectory() + "\\batches\\hex_path.txt";
             if (!File.Exists(path))
             {
@@ -63,11 +59,17 @@ namespace ProgrammerApp
             {
                 hexToolStripMenuItem_Click(this, null);
             }
-
             Console.WriteLine("Hex path is " + path_to_hex);
 
             connectProgs();
             message(String.Format("{0} programmers connected.", num_of_progs));
+            Console.WriteLine("{0} progs found", num_of_progs);
+        }
+
+        private void connectProgs(object sender, EventArgs e)
+        {
+            reinitializeComponent();
+            connectProgs();
         }
 
         public void connectProgs()
@@ -84,68 +86,72 @@ namespace ProgrammerApp
             
             if (File.Exists(path))
             {
-                var task = Task.Run(() => tempProg.IsFileReady(path));
+                var task = Task.Run(() => tempProg.WaitForFile(path));
                 if (task.Wait(TimeSpan.FromSeconds(2)))
                 {
-                    if(task.Result)
+                    if (task.Result)
                     {
                         string text = System.IO.File.ReadAllText(path);
                         num_of_progs = Regex.Matches(text, "Found USBtinyISP").Count;
+                        if (num_of_progs == 0)
+                        {
+                            num_of_progs = 0;
+                            button1.Text = "Refresh";
+                            refreshMenuItem.Text = "Refresh";
+                            toolStripMenuItem2.Enabled = false;
+                            deviceToolStripMenuItem.DropDownItems.Add(refreshMenuItem);
+                        }
+                        else {
+                            deviceToolStripMenuItem.DropDownItems.Remove(refreshMenuItem);
+                            for (int i = 0; i < num_of_progs; i++)
+                            {
+                                Thread checkerThread = new Thread(new ThreadStart(() =>
+                                {
+                                    button1.Text = "Program";
+                                    toolStripMenuItem2.Enabled = true;
+                                    addProgrammer(i);
+
+                                    if (progs[i].active)
+                                    {
+                                        if (progs[i].connected())
+                                        {
+                                            prog_textBoxes[i].Invoke((MethodInvoker)(() =>
+                                            {
+                                                prog_textBoxes[i].ForeColor = Color.White;
+                                                prog_textBoxes[i].BackColor = Color.DarkCyan;
+                                            }));
+                                        }
+                                        else
+                                        {
+                                            prog_textBoxes[i].Invoke((MethodInvoker)(() =>
+                                            {
+                                                prog_textBoxes[i].ForeColor = Color.White;
+                                                prog_textBoxes[i].BackColor = Color.Firebrick;
+                                            }));
+                                        }
+                                    }
+                                    prog_textBoxes[i].Text = progs[i].message;
+                                }));
+                                checkerThread.Start();
+                            }
+                        }
                     }
                     else
                     {
-                        message("File Error: Could not open");
+                        message("File Error: Could not gain access.");
                     }
                 }
                 else
                 {
-                    message("File Error: Timed out");
+                    message("File Error: Timed out.");
                     num_of_progs = 0;
                 }
                 task.Dispose();
             }
             else
             {
-                num_of_progs = 0;
-            }
-
-            if (num_of_progs == 0)
-            {
-                button1.Text = "Refresh";
-                deviceToolStripMenuItem.DropDownItems.Add(refreshMenuItem);
-            }
-            else
-            {
-                button1.Text = "Program";
-                //button1.Text = "Upload";
-                //deviceToolStripMenuItem.DropDownItems.Remove(refreshMenuItem);
-            }
-
-            for (int i = 0; i < num_of_progs; i++)
-            {
-                if (prog_labels[i] == null)
-                {
-                    addProgrammer(i);
-                }
-
-                if (!progs[i].active)
-                {
-                    return;
-                }
-                if (!progs[i].connected())
-                {
-                    button1.Text = "Refresh";
-                    prog_textBoxes[i].ForeColor = Color.White;
-                    prog_textBoxes[i].BackColor = Color.Firebrick;
-                }
-                else
-                {
-                    prog_textBoxes[i].ForeColor = Color.White;
-                    prog_textBoxes[i].BackColor = Color.DarkCyan;
-                }
-                prog_textBoxes[i].Text = progs[i].message;
-            }
-            Console.WriteLine("{0} progs found", num_of_progs);
+                Console.WriteLine(String.Format("File Error: {0} not nound.", path));
+            } 
         }
 
         private void addProgrammer(int i)
@@ -192,33 +198,14 @@ namespace ProgrammerApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            connectProgs();
-            bool hasBoard = false;
-            for (int i = 0; i < num_of_progs; i++)
-            {
-                if (progs[i].connected())
-                {
-                    hasBoard = true;
-                }
-            }
-            if(!hasBoard)
-            {
-                button1.Text = "Refresh";
-                return;
-            }
-
-            button1.Text = "Uploading...";
-            progressWorker.RunWorkerAsync(100);
             if (num_of_progs == 0)
             {
-                reinitializeComponent();
+                connectProgs(this, null);
             }
             else
             {
-                performCore();
+                uploadWorker.RunWorkerAsync();
             }
-            button1.Text = "Program";
         }
 
 
@@ -234,40 +221,40 @@ namespace ProgrammerApp
             progressBar1.Value = e.ProgressPercentage;
         }
 
-        private void performCore()
+        private bool performCore()
         {
             path_to_hex = File.ReadAllText(System.IO.Directory.GetCurrentDirectory() + "\\batches\\hex_path.txt");
 
             if (path_to_hex.Length == 0)
             {
-                //Console.WriteLine(path_to_hex);
                 MessageBox.Show("No HEX File Selected", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 hexToolStripMenuItem_Click(this, null);
-                return;
+                return false;
             }
             String root = System.IO.Directory.GetCurrentDirectory();
+
             bool success = false;
             for (int i = 0; i < num_of_progs; i++)
             {
-                if (progs[i].active && progs[i].hasBoard)
+                Thread uploadThread = new Thread(new ThreadStart(() =>
                 {
-                    if (!progs[i].program(path_to_hex))
+                    if (progs[i].active && progs[i].hasBoard && progs[i].program(path_to_hex))
                     {
-                        prog_textBoxes[i].ForeColor = Color.White;
-                        prog_textBoxes[i].BackColor = Color.Firebrick;
-                    }
-                    else
-                    {
-                        prog_textBoxes[i].ForeColor = Color.White;
-                        prog_textBoxes[i].BackColor = Color.ForestGreen;
+                        prog_textBoxes[i].Invoke((MethodInvoker)(() =>
+                        {
+                            prog_textBoxes[i].ForeColor = Color.White;
+                            prog_textBoxes[i].BackColor = Color.DarkCyan;
+                            prog_textBoxes[i].Text = progs[i].message;
+                        }));
                         success = true;
                     }
-                    prog_textBoxes[i].Text = progs[i].message;
-                }
+                }));
+                uploadThread.Start();
             }
             if (!success)
             {
-                message("Error - No Board");
+                message("Error: No Board(s)");
+                return false;
             }
             else
             {
@@ -279,8 +266,33 @@ namespace ProgrammerApp
                     }
                 }
             }
+            return true;
         }
-        
+
+        void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            connectProgs();
+            uploadWorker.ReportProgress(20);
+            if (num_of_progs > 0)
+            {
+                performCore();
+            }
+            else
+            {
+                uploadWorker.ReportProgress(0);
+            }
+        }
+
+        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar1.Value = e.ProgressPercentage;
+        }
+
+        void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            message("Upload Successful");
+        }
+
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
@@ -321,12 +333,15 @@ namespace ProgrammerApp
 
         private void message(String text)
         {
-            if (richTextBox1.Text.Length > richTextBox1.MaxLength-100)
+            richTextBox1.Invoke((MethodInvoker)(() =>
             {
-                richTextBox1.Text = "";
-            }
-            DateTime time = new DateTime(3057, 3, 14);
-            richTextBox1.Text += String.Format("{0}: {1}\n", DateTime.Now.ToString("hh:mm:sstt"), text);
+                if (richTextBox1.Text.Length > richTextBox1.MaxLength - 100)
+                {
+                    richTextBox1.Text = "";
+                }
+                DateTime time = new DateTime(3057, 3, 14);
+                richTextBox1.Text += String.Format("{0}: {1}\n", DateTime.Now.ToString("hh:mm:sstt"), text);
+            }));
         }
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)

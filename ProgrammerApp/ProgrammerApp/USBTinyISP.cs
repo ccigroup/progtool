@@ -61,19 +61,6 @@ namespace ProgrammerApp
             process.WaitForExit();
         }
 
-        public bool connected(int rec)
-        {
-            Console.WriteLine("Connection attempt: " + rec);
-            rec--;
-            if (rec > 0)
-            {
-                bool ret = connected();
-                if (ret) return true;
-                else connected(rec--);
-            }
-            return false;
-        }
-
         public bool connected()
         {
             Console.WriteLine("{0}> check", this.id);
@@ -94,7 +81,7 @@ namespace ProgrammerApp
                 this.message = "Results Not Found";
             }
             else {
-                var task = Task.Run(() => IsFileReady(path));
+                var task = Task.Run(() => WaitForFile(path));
                 string text = "";
                 if (task.Wait(TimeSpan.FromSeconds(5)))
                 {
@@ -134,7 +121,7 @@ namespace ProgrammerApp
                 else
                 {
                     this.message = "Error";
-                    return this.connected(3);
+                    return this.connected();
                 }
             }
             return false;
@@ -147,33 +134,37 @@ namespace ProgrammerApp
             path_to_hex = path_to_hex.Replace(@" ", "\" \"");
             String args = String.Format("{0} {1}", this.id, path_to_hex);
             string path = root + String.Format("\\batches\\core_results\\core_results_p{0}.txt", this.id);
-
-            while (!this.IsFileReady(path)) ;
             File.WriteAllText(path, String.Empty);
 
             this.performBat(target, args);
 
-            //System.Threading.Thread.Sleep(5000);
             Console.WriteLine("Core results path:" + path);
 
             if (File.Exists(path))
             {
-                while (!this.IsFileReady(path)) ;
-                string text = System.IO.File.ReadAllText(path);
-                Console.WriteLine("Core Results: " + text);
-                if (text.IndexOf("initialization failed, rc=-1") != -1)
+                var task = Task.Run(() => WaitForFile(path));
+                if (task.Wait(TimeSpan.FromSeconds(2)))
                 {
-                    this.message = "Board not found.";
-                }
-                else if (text.IndexOf("invalid file format") != -1)
-                {
-                    this.message = "File format error.";
-                }
-                else
-                {
-                    this.message = "Upload successful";
-                    this.hasSuccess = true;
-                    return true;
+                    if (task.Result)
+                    {
+                        string text = System.IO.File.ReadAllText(path);
+                        Console.WriteLine("Core Results: " + text);
+                        if (text.IndexOf("initialization failed, rc=-1") != -1)
+                        {
+                            this.message = "Board not found.";
+                        }
+                        else if (text.IndexOf("invalid file format") != -1)
+                        {
+                            this.message = "File format error.";
+                        }
+                        else
+                        {
+                            this.message = "Upload successful";
+                            this.hasSuccess = true;
+                            return true;
+                        }
+
+                    }
                 }
             }
             else
@@ -185,7 +176,7 @@ namespace ProgrammerApp
         }
 
 
-        public bool IsFileReady(String path)
+        public bool WaitForFile(String path)
         {
             while (true)
             {
