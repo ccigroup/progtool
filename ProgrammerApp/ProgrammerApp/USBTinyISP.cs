@@ -39,9 +39,11 @@ namespace ProgrammerApp
 
         public void performBat(String target, String args)
         {
+           
             target = target.Replace(@" ", "\" \"");
-            String command = "/c" + target + " " + args;
-            //Console.WriteLine("Running: " + command);
+            String path_to_avrdude = target + "\\..\\..\\WinAVR\\bin\\";
+            String command = "/c " + target + " " + args + " " + path_to_avrdude;
+            Console.WriteLine("Running: " + command);
             System.Diagnostics.ProcessStartInfo processInfo = new System.Diagnostics.ProcessStartInfo("cmd.exe", command);
             processInfo.CreateNoWindow = true;
             processInfo.UseShellExecute = false;
