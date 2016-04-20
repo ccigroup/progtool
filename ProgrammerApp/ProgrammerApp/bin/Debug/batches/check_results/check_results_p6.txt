@@ -1,5 +1,5 @@
 Tue 04/19/2016 
-10:54 PM
+10:58 PM
 
 avrdude: Version 6.0.1, compiled on Apr 15 2015 at 19:59:58
          Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
@@ -47,7 +47,7 @@ avrdude: programmer operation not supported
 avrdude: Using SCK period of 10 usec
 avrdude: AVR device initialized and ready to accept instructions
 
-Reading | ################################################## | 100% 0.01s
+Reading | ################################################## | 100% 0.00s
 
 avrdude: Device signature = 0x1e950f
 avrdude: safemode: lfuse reads as FF

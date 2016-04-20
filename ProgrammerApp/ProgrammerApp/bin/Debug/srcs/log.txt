@@ -22,3 +22,6 @@ Export 4/19/2016 10:11:43 PM
 10:11:42PM: Log Exported to \src\log.txt
 10:11:43PM: Log Exported to \src\log.txt
 
+Export 4/19/2016 10:58:51 PM
+10:58:49PM: 2 programmers connected.
+
