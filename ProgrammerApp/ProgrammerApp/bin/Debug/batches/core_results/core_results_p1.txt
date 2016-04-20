@@ -1,16 +1,14 @@
-Tue 04/19/2016 
-09:22 AM
 
 avrdude: Version 6.0.1, compiled on Apr 15 2015 at 19:59:58
          Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
          Copyright (c) 2007-2009 Joerg Wunsch
 
-         System wide configuration file is "C:\WinAVR\bin\avrdude.conf"
+         System wide configuration file is "C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\bin\Debug\WinAVR\bin\avrdude.conf"
 
          Using Port                    : usb:bus-0:\\.\libusb0-0001--0x1781-0x0c9f
          Using Programmer              : usbtiny
 avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0001--0x1781-0x0c9f
-avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0002--0x1781-0x0c9f
+avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0003--0x1781-0x0c9f
          AVR Part                      : ATmega328P
          Chip Erase delay              : 9000 us
          PAGEL                         : PD7
@@ -57,21 +55,21 @@ avrdude: NOTE: "flash" memory has been specified, an erase cycle will be perform
          To disable this feature, specify the -D option.
 avrdude: erasing chip
 avrdude: Using SCK period of 10 usec
-avrdude: reading input file "C:\Users\mfonk\Desktop\blink.hex"
-avrdude: writing flash (3098 bytes):
+avrdude: reading input file "C:\Users\mfonk\Desktop\quickblink.hex"
+avrdude: writing flash (1066 bytes):
 
-Writing | ################################################## | 100% 3.83s
+Writing | ################################################## | 100% 1.37s
 
-avrdude: 3098 bytes of flash written
-avrdude: verifying flash memory against C:\Users\mfonk\Desktop\blink.hex:
-avrdude: load data flash data from input file C:\Users\mfonk\Desktop\blink.hex:
-avrdude: input file C:\Users\mfonk\Desktop\blink.hex contains 3098 bytes
+avrdude: 1066 bytes of flash written
+avrdude: verifying flash memory against C:\Users\mfonk\Desktop\quickblink.hex:
+avrdude: load data flash data from input file C:\Users\mfonk\Desktop\quickblink.hex:
+avrdude: input file C:\Users\mfonk\Desktop\quickblink.hex contains 1066 bytes
 avrdude: reading on-chip flash data:
 
-Reading | ################################################## | 100% 2.71s
+Reading | ################################################## | 100% 0.97s
 
 avrdude: verifying ...
-avrdude: 3098 bytes of flash verified
+avrdude: 1066 bytes of flash verified
 
 avrdude: safemode: lfuse reads as FF
 avrdude: safemode: hfuse reads as DA

@@ -18,12 +18,11 @@ namespace ProgrammerApp
         public static BackgroundWorker uploadWorker;
 
         public string path_to_hex = "";
-        public static int num_of_progs = 2;
-        public static USBTinyISP[] progs = new USBTinyISP[num_of_progs];
-        public static Label[] prog_labels = new Label[num_of_progs];
-        public static RichTextBox[] prog_textBoxes = new RichTextBox[num_of_progs];
-        public static ToolStripMenuItem[] prog_menuitems = new ToolStripMenuItem[num_of_progs];
-        public static ToolStripMenuItem refreshMenuItem = new ToolStripMenuItem();
+        public static int num_of_progs = 0;
+        public static USBTinyISP[] progs;
+        public static Label[] prog_labels;
+        public static RichTextBox[] prog_textBoxes;
+        public static ToolStripMenuItem[] prog_menuitems;
         public static System.Windows.Forms.Timer progressTimer = new System.Windows.Forms.Timer();
 
         public MainForm()
@@ -34,14 +33,12 @@ namespace ProgrammerApp
             uploadWorker.ProgressChanged += worker_ProgressChanged;
             uploadWorker.DoWork += worker_DoWork;
             uploadWorker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            refreshMenuItem.Click += new EventHandler(connectProgs);
         }
 
         public void reinitializeComponent()
         {
             this.Controls.Clear();
             InitializeComponent();
-            connectProgs();
             Form1_Load(this, null);
         }
 
@@ -66,10 +63,9 @@ namespace ProgrammerApp
             Console.WriteLine("{0} progs found", num_of_progs);
         }
 
-        private void connectProgs(object sender, EventArgs e)
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             reinitializeComponent();
-            connectProgs();
         }
 
         public void connectProgs()
@@ -77,7 +73,7 @@ namespace ProgrammerApp
             USBTinyISP tempProg = new USBTinyISP();
             String root = System.IO.Directory.GetCurrentDirectory();
             String target = root + "\\batches\\check.bat";
-            String args = String.Format("c");
+            String args = String.Format("0");
 
             tempProg.performBat(target, args);
 
@@ -97,19 +93,36 @@ namespace ProgrammerApp
                         {
                             num_of_progs = 0;
                             button1.Text = "Refresh";
-                            refreshMenuItem.Text = "Refresh";
                             toolStripMenuItem2.Enabled = false;
-                            deviceToolStripMenuItem.DropDownItems.Add(refreshMenuItem);
+                            
                         }
                         else {
-                            deviceToolStripMenuItem.DropDownItems.Remove(refreshMenuItem);
+                            //deviceToolStripMenuItem.DropDownItems.Remove(refreshMenuItem);
+
+                            progs = new USBTinyISP[num_of_progs];
+                            prog_labels = new Label[num_of_progs];
+                            prog_textBoxes = new RichTextBox[num_of_progs];
+                            prog_menuitems = new ToolStripMenuItem[num_of_progs];
+
                             for (int i = 0; i < num_of_progs; i++)
                             {
-                                Thread checkerThread = new Thread(new ThreadStart(() =>
+                                //Thread checkerThread = new Thread(new ThreadStart(() =>
                                 {
                                     button1.Text = "Program";
                                     toolStripMenuItem2.Enabled = true;
-                                    addProgrammer(i);
+                                    int index = text.IndexOf("Found USBtinyISP");
+                                    Console.WriteLine("Index is {0}", index);
+                                    int id = 0;
+                                    if (index < 0) id = i;
+                                    else
+                                    {
+                                        text = text.Substring(index+48);
+                                        Console.WriteLine("Parsed text is \n {0}", text);
+                                        id  = Int32.Parse(text.Substring(0, 4));
+                                    }
+                                    Console.WriteLine("id is {0}", id);
+
+                                    addProgrammer(i, id);
 
                                     if (progs[i].active)
                                     {
@@ -119,6 +132,8 @@ namespace ProgrammerApp
                                             {
                                                 prog_textBoxes[i].ForeColor = Color.White;
                                                 prog_textBoxes[i].BackColor = Color.DarkCyan;
+                                                prog_textBoxes[i].Text = progs[i].message;
+                                                
                                             }));
                                         }
                                         else
@@ -127,12 +142,12 @@ namespace ProgrammerApp
                                             {
                                                 prog_textBoxes[i].ForeColor = Color.White;
                                                 prog_textBoxes[i].BackColor = Color.Firebrick;
+                                                 prog_textBoxes[i].Text = progs[i].message;
                                             }));
                                         }
                                     }
-                                    prog_textBoxes[i].Text = progs[i].message;
-                                }));
-                                checkerThread.Start();
+                                }//));
+                                //checkerThread.Start();
                             }
                         }
                     }
@@ -154,16 +169,16 @@ namespace ProgrammerApp
             } 
         }
 
-        private void addProgrammer(int i)
+        private void addProgrammer(int i, int id)
         {
-            progs[i] = new USBTinyISP(i + 1);
+            progs[i] = new USBTinyISP(id);
 
             prog_labels[i] = new Label();
             Point loc = new Point(5, this.Height - 35);
             prog_labels[i].Location = loc;
             prog_labels[i].AutoSize = true;
             prog_labels[i].ForeColor = SystemColors.ControlText;
-            prog_labels[i].Text = String.Format("P{0}:", i + 1);
+            prog_labels[i].Text = String.Format("P{0}:", i);
             prog_labels[i].Parent = this;
 
             prog_textBoxes[i] = new RichTextBox();
@@ -189,7 +204,7 @@ namespace ProgrammerApp
                 }
                 else
                 {
-                    connectProgs();
+                    //connectProgs();
                 }
 
             });
@@ -200,11 +215,15 @@ namespace ProgrammerApp
         {
             if (num_of_progs == 0)
             {
-                connectProgs(this, null);
+                refreshToolStripMenuItem_Click(this, null);
             }
             else
             {
-                uploadWorker.RunWorkerAsync();
+                button1.Text = "Please Wait";
+                if(!uploadWorker.IsBusy)
+                {
+                    uploadWorker.RunWorkerAsync();
+                }
             }
         }
 
@@ -232,47 +251,74 @@ namespace ProgrammerApp
                 return false;
             }
             String root = System.IO.Directory.GetCurrentDirectory();
-
-            bool success = false;
-            for (int i = 0; i < num_of_progs; i++)
-            {
-                Thread uploadThread = new Thread(new ThreadStart(() =>
-                {
-                    if (progs[i].active && progs[i].hasBoard && progs[i].program(path_to_hex))
-                    {
-                        prog_textBoxes[i].Invoke((MethodInvoker)(() =>
+            uploadWorker.ReportProgress(10);
+            int progress = 10;
+            Parallel.For(0, num_of_progs,
+                   i =>
+                   {
+                       progress += 80 / num_of_progs;
+                       uploadWorker.ReportProgress(progress);
+                       Console.WriteLine("Creating thread for P{0}", progs[i].id);
+                       bool success = false;
+                       Console.WriteLine("<<<<{0}>>>...", i);
+                       if (progs[i].connected()) {
+                           while (!success && progs[i].attempts < 5)
+                           {
+                               if (i == 0)
+                               {
+                                   Console.WriteLine("P{0} progress is {1}", progs[i].id, progress);
+                                   uploadWorker.ReportProgress(progress);
+                               }
+                               if (progs[i].active && progs[i].hasBoard && progs[i].program(path_to_hex))
+                               {
+                                   Console.WriteLine("P{0} is active and has a board and programmed successfully...", progs[i].id);
+                                   prog_textBoxes[i].Invoke((MethodInvoker)(() =>
+                                   {
+                                       prog_textBoxes[i].ForeColor = Color.White;
+                                       prog_textBoxes[i].BackColor = Color.ForestGreen;
+                                       prog_textBoxes[i].Text = progs[i].message;
+                                   }));
+                                   success = true;
+                               }
+                               else
+                               {
+                                   progs[i].attempts++;
+                                   prog_textBoxes[i].Invoke((MethodInvoker)(() =>
+                                   {
+                                       prog_textBoxes[i].ForeColor = Color.White;
+                                       prog_textBoxes[i].BackColor = Color.Firebrick;
+                                       prog_textBoxes[i].Text = progs[i].message;
+                                       message(String.Format("Retrying upload on P{0}: Attempt {1}", progs[i].id, progs[i].attempts));
+                                   }));
+                                   Console.WriteLine("P{0} failed.", progs[i].id);
+                               }
+                               Console.WriteLine("<<<LOOP>>>");
+                           }
+                           Console.WriteLine("Processing {0} on thread {1}", i, Thread.CurrentThread.ManagedThreadId);
+                           if (progs[i].hasSuccess)
+                           {
+                               message(String.Format("Uploaded {0} on P{1}", path_to_hex, progs[i].id));
+                           }
+                           else
+                           {
+                               message(String.Format("Failed to upload on P{0}", progs[i].id));
+                           }
+                       }
+                       else 
                         {
-                            prog_textBoxes[i].ForeColor = Color.White;
-                            prog_textBoxes[i].BackColor = Color.DarkCyan;
-                            prog_textBoxes[i].Text = progs[i].message;
-                        }));
-                        success = true;
-                    }
-                }));
-                uploadThread.Start();
-            }
-            if (!success)
-            {
-                message("Error: No Board(s)");
-                return false;
-            }
-            else
-            {
-                for (int i = 0; i < num_of_progs; i++)
-                {
-                    if (progs[i].hasSuccess)
-                    {
-                        message(String.Format("Uploaded {0} on P{1}", path_to_hex, progs[i].id));
-                    }
-                }
-            }
+                            prog_textBoxes[i].Invoke((MethodInvoker)(() =>
+                            {
+                                prog_textBoxes[i].ForeColor = Color.White;
+                                prog_textBoxes[i].BackColor = Color.Firebrick;
+                                prog_textBoxes[i].Text = progs[i].message;
+                            }));
+                        }
+                   });
             return true;
         }
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            connectProgs();
-            uploadWorker.ReportProgress(20);
             if (num_of_progs > 0)
             {
                 performCore();
@@ -286,17 +332,21 @@ namespace ProgrammerApp
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
+            Console.WriteLine("Progress changed to {0}", e.ProgressPercentage);
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            message("Upload Successful");
+            button1.Text = "Program";
+            progressBar1.Value = 100;
+            Thread.Sleep(1000);
+            progressBar1.Value = 0;
         }
 
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-
+            
         }
 
         private void hexToolStripMenuItem_Click(object sender, EventArgs e)
@@ -339,8 +389,9 @@ namespace ProgrammerApp
                 {
                     richTextBox1.Text = "";
                 }
-                DateTime time = new DateTime(3057, 3, 14);
                 richTextBox1.Text += String.Format("{0}: {1}\n", DateTime.Now.ToString("hh:mm:sstt"), text);
+                richTextBox1.SelectionStart = richTextBox1.Text.Length;
+                richTextBox1.ScrollToCaret();
             }));
         }
 
@@ -360,6 +411,25 @@ namespace ProgrammerApp
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            String root = System.IO.Directory.GetCurrentDirectory();
+            String path = root + "\\srcs\\log.txt";
+
+            String text = richTextBox1.Text.Replace("\n", Environment.NewLine);
+
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path, String.Empty);
+            }
+            if (File.Exists(path))
+            {
+                File.AppendAllText(path, String.Format("Export {0}", DateTime.Now.ToString() + Environment.NewLine));
+                File.AppendAllText(path, String.Format("{0}", text + Environment.NewLine));
+                message("Log Exported to \\src\\log.txt");
+            }
         }
     }
 }

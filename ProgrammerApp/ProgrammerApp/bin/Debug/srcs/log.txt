@@ -1,0 +1,24 @@
+Export 4/19/2016 10:11:42 PM
+10:11:06PM: 2 programmers connected.
+10:11:15PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P6
+10:11:15PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P7
+10:11:41PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P6
+10:11:41PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P7
+
+Export 4/19/2016 10:11:42 PM
+10:11:06PM: 2 programmers connected.
+10:11:15PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P6
+10:11:15PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P7
+10:11:41PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P6
+10:11:41PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P7
+10:11:42PM: Log Exported to \src\log.txt
+
+Export 4/19/2016 10:11:43 PM
+10:11:06PM: 2 programmers connected.
+10:11:15PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P6
+10:11:15PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P7
+10:11:41PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P6
+10:11:41PM: Uploaded C:\Users\mfonk\Desktop\quickblink.hex on P7
+10:11:42PM: Log Exported to \src\log.txt
+10:11:43PM: Log Exported to \src\log.txt
+

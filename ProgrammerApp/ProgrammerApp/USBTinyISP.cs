@@ -17,6 +17,7 @@ namespace ProgrammerApp
         public bool hasBoard;
         public bool active;
         public bool hasSuccess;
+        public int attempts;
 
         public USBTinyISP()
         {
@@ -26,6 +27,7 @@ namespace ProgrammerApp
             this.hasBoard = false;
             this.active = true;
             this.hasSuccess = false;
+            this.attempts = 0;
         }
         public USBTinyISP(int id)
         {
@@ -35,13 +37,14 @@ namespace ProgrammerApp
             this.hasBoard = false;
             this.active = true;
             this.hasSuccess = false;
+            this.attempts = 0;
         }
 
         public void performBat(String target, String args)
         {
            
             target = target.Replace(@" ", "\" \"");
-            String path_to_avrdude = target + "\\..\\..\\WinAVR\\bin\\";
+            String path_to_avrdude = target + "\\..\\..\\tools\\avr\\bin\\";
             String command = "/c " + target + " " + args + " " + path_to_avrdude;
             Console.WriteLine("Running: " + command);
             System.Diagnostics.ProcessStartInfo processInfo = new System.Diagnostics.ProcessStartInfo("cmd.exe", command);
@@ -70,11 +73,15 @@ namespace ProgrammerApp
             String target = root + "\\batches\\check.bat";
             String args = String.Format("{0}", this.id);
             string path = root + String.Format("\\batches\\check_results\\check_results_p{0}.txt", this.id);
-            try
+            var task = Task.Run(() => WaitForFile(path));
+            string text = "";
+            if (task.Wait(TimeSpan.FromSeconds(5)))
             {
-                File.WriteAllText(path, String.Empty);
+                if (task.Result)
+                {
+                    File.WriteAllText(path, String.Empty);
+                }
             }
-            catch (Exception) { }
 
             this.performBat(target, args);
 
@@ -83,8 +90,8 @@ namespace ProgrammerApp
                 this.message = "Results Not Found";
             }
             else {
-                var task = Task.Run(() => WaitForFile(path));
-                string text = "";
+                task = Task.Run(() => WaitForFile(path));
+                text = "";
                 if (task.Wait(TimeSpan.FromSeconds(5)))
                 {
                     if (task.Result)
@@ -136,7 +143,14 @@ namespace ProgrammerApp
             path_to_hex = path_to_hex.Replace(@" ", "\" \"");
             String args = String.Format("{0} {1}", this.id, path_to_hex);
             string path = root + String.Format("\\batches\\core_results\\core_results_p{0}.txt", this.id);
-            File.WriteAllText(path, String.Empty);
+            var task = Task.Run(() => WaitForFile(path));
+            if (task.Wait(TimeSpan.FromSeconds(5)))
+            {
+                if (task.Result)
+                {
+                    File.WriteAllText(path, String.Empty);
+                }
+            }
 
             this.performBat(target, args);
 
@@ -144,8 +158,8 @@ namespace ProgrammerApp
 
             if (File.Exists(path))
             {
-                var task = Task.Run(() => WaitForFile(path));
-                if (task.Wait(TimeSpan.FromSeconds(2)))
+                task = Task.Run(() => WaitForFile(path));
+                if (task.Wait(TimeSpan.FromSeconds(5)))
                 {
                     if (task.Result)
                     {
@@ -162,10 +176,10 @@ namespace ProgrammerApp
                         else
                         {
                             this.message = "Upload successful";
+                            this.attempts = 0;
                             this.hasSuccess = true;
                             return true;
                         }
-
                     }
                 }
             }
