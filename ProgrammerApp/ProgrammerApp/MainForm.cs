@@ -18,6 +18,7 @@ namespace ProgrammerApp
         public static BackgroundWorker uploadWorker;
 
         public string path_to_hex = "";
+        public string path_to_avrdude = "";
         public static int num_of_progs = 0;
         public static USBTinyISP[] progs;
         public static Label[] prog_labels;
@@ -44,23 +45,35 @@ namespace ProgrammerApp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
-            String path = System.IO.Directory.GetCurrentDirectory() + "\\batches\\hex_path.txt";
+            String path = System.IO.Directory.GetCurrentDirectory() + "\\batches\\avrdude_path.txt";
             if (!File.Exists(path))
             {
                 File.WriteAllText(path, String.Empty);
             }
-            String path_to_hex = File.ReadAllText(path);
-            Console.WriteLine("Path length " + path_to_hex.Length);
+            path_to_avrdude = File.ReadAllText(path);
+            //Console.WriteLine("Path length " + path_to_avrdude.Length);
+            if (path_to_avrdude.Length == 0)
+            {
+                hexToolStripMenuItem_Click(this, null);
+            }
+            //Console.WriteLine("Avdude path is " + path_to_avrdude);
+
+            path = System.IO.Directory.GetCurrentDirectory() + "\\batches\\hex_path.txt";
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path, String.Empty);
+            }
+            path_to_hex = File.ReadAllText(path);
+            //Console.WriteLine("Path length " + path_to_hex.Length);
             if (path_to_hex.Length == 0)
             {
                 hexToolStripMenuItem_Click(this, null);
             }
-            Console.WriteLine("Hex path is " + path_to_hex);
+            //Console.WriteLine("Hex path is " + path_to_hex);
 
             connectProgs();
             message(String.Format("{0} programmers connected.", num_of_progs));
-            Console.WriteLine("{0} progs found", num_of_progs);
+            //Console.WriteLine("{0} progs found", num_of_progs);
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
@@ -70,10 +83,11 @@ namespace ProgrammerApp
 
         public void connectProgs()
         {
-            USBTinyISP tempProg = new USBTinyISP();
+            int tempId = 0;
+            USBTinyISP tempProg = new USBTinyISP(tempId, path_to_avrdude);
             String root = System.IO.Directory.GetCurrentDirectory();
             String target = root + "\\batches\\check.bat";
-            String args = String.Format("0");
+            String args = String.Format("{0}", tempId);
 
             tempProg.performBat(target, args);
 
@@ -111,16 +125,16 @@ namespace ProgrammerApp
                                     button1.Text = "Program";
                                     toolStripMenuItem2.Enabled = true;
                                     int index = text.IndexOf("Found USBtinyISP");
-                                    Console.WriteLine("Index is {0}", index);
+                                    //Console.WriteLine("Index is {0}", index);
                                     int id = 0;
                                     if (index < 0) id = i;
                                     else
                                     {
                                         text = text.Substring(index+48);
-                                        Console.WriteLine("Parsed text is \n {0}", text);
+                                        //Console.WriteLine("Parsed text is \n {0}", text);
                                         id  = Int32.Parse(text.Substring(0, 4));
                                     }
-                                    Console.WriteLine("id is {0}", id);
+                                    //Console.WriteLine("id is {0}", id);
 
                                     addProgrammer(i, id);
 
@@ -165,13 +179,13 @@ namespace ProgrammerApp
             }
             else
             {
-                Console.WriteLine(String.Format("File Error: {0} not nound.", path));
+                //Console.WriteLine(String.Format("File Error: {0} not nound.", path));
             } 
         }
 
         private void addProgrammer(int i, int id)
         {
-            progs[i] = new USBTinyISP(id);
+            progs[i] = new USBTinyISP(id, path_to_avrdude);
 
             prog_labels[i] = new Label();
             Point loc = new Point(5, this.Height - 35);
@@ -258,20 +272,20 @@ namespace ProgrammerApp
                    {
                        progress += 80 / num_of_progs;
                        uploadWorker.ReportProgress(progress);
-                       Console.WriteLine("Creating thread for P{0}", progs[i].id);
+                       //Console.WriteLine("Creating thread for P{0}", progs[i].id);
                        bool success = false;
-                       Console.WriteLine("<<<<{0}>>>...", i);
+                       //Console.WriteLine("<<<<{0}>>>...", i);
                        if (progs[i].connected()) {
                            while (!success && progs[i].attempts < 5)
                            {
                                if (i == 0)
                                {
-                                   Console.WriteLine("P{0} progress is {1}", progs[i].id, progress);
+                                   //Console.WriteLine("P{0} progress is {1}", progs[i].id, progress);
                                    uploadWorker.ReportProgress(progress);
                                }
                                if (progs[i].active && progs[i].hasBoard && progs[i].program(path_to_hex))
                                {
-                                   Console.WriteLine("P{0} is active and has a board and programmed successfully...", progs[i].id);
+                                   //Console.WriteLine("P{0} is active and has a board and programmed successfully...", progs[i].id);
                                    prog_textBoxes[i].Invoke((MethodInvoker)(() =>
                                    {
                                        prog_textBoxes[i].ForeColor = Color.White;
@@ -290,11 +304,11 @@ namespace ProgrammerApp
                                        prog_textBoxes[i].Text = progs[i].message;
                                        message(String.Format("Retrying upload on P{0}: Attempt {1}", progs[i].id, progs[i].attempts));
                                    }));
-                                   Console.WriteLine("P{0} failed.", progs[i].id);
+                                   //Console.WriteLine("P{0} failed.", progs[i].id);
                                }
-                               Console.WriteLine("<<<LOOP>>>");
+                               //Console.WriteLine("<<<LOOP>>>");
                            }
-                           Console.WriteLine("Processing {0} on thread {1}", i, Thread.CurrentThread.ManagedThreadId);
+                           //Console.WriteLine("Processing {0} on thread {1}", i, Thread.CurrentThread.ManagedThreadId);
                            if (progs[i].hasSuccess)
                            {
                                message(String.Format("Uploaded {0} on P{1}", path_to_hex, progs[i].id));
@@ -332,7 +346,7 @@ namespace ProgrammerApp
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
-            Console.WriteLine("Progress changed to {0}", e.ProgressPercentage);
+            //Console.WriteLine("Progress changed to {0}", e.ProgressPercentage);
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -349,22 +363,6 @@ namespace ProgrammerApp
             
         }
 
-        private void hexToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Displays an OpenFileDialog so the user can select a Cursor.
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "Compiled Hex|*.hex";
-            openFileDialog1.Title = "Select a Core Hex File";
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                path_to_hex = openFileDialog1.FileName;
-                String path = System.IO.Directory.GetCurrentDirectory() + "\\batches\\hex_path.txt";
-                File.WriteAllText(path, path_to_hex);
-                //Console.WriteLine("New path to hex is {0}", path_to_hex);
-                message(String.Format("Path to hex is name {0}", path_to_hex));
-            }
-        }
 
         private void exitStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -404,7 +402,7 @@ namespace ProgrammerApp
         {
             String root = System.IO.Directory.GetCurrentDirectory();
             String path = root + "\\srcs\\help.html";
-            Console.WriteLine(path);
+            //Console.WriteLine(path);
             System.Diagnostics.Process.Start(path);
         }
 
@@ -431,5 +429,38 @@ namespace ProgrammerApp
                 message("Log Exported to \\src\\log.txt");
             }
         }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            // Displays an OpenFileDialog so the user can select a Cursor.
+            OpenFileDialog openFileDialog2 = new OpenFileDialog();
+            //openFileDialog1.Filter = "";
+            openFileDialog2.Title = "Select AVRDUde";
+
+            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                path_to_avrdude = openFileDialog2.FileName;
+                String path = System.IO.Directory.GetCurrentDirectory() + "\\batches\\avrdude_path.txt";
+                File.WriteAllText(path, path_to_avrdude);
+                message(String.Format("Path to avrdude is {0}", path_to_avrdude));
+            }
+        }
+        private void hexToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Displays an OpenFileDialog so the user can select a Cursor.
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "Compiled Hex|*.hex";
+            openFileDialog1.Title = "Select a Core Hex File";
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                path_to_hex = openFileDialog1.FileName;
+                String path = System.IO.Directory.GetCurrentDirectory() + "\\batches\\hex_path.txt";
+                File.WriteAllText(path, path_to_hex);
+                ////Console.WriteLine("New path to hex is {0}", path_to_hex);
+                message(String.Format("Path to hex is  {0}", path_to_hex));
+            }
+        }
+
     }
 }

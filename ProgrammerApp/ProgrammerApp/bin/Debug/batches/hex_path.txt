@@ -1,1 +1,1 @@
-C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\bin\Debug\blink.hex
+C:\Users\mfonk\Desktop\quickblink.hex

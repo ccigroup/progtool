@@ -18,6 +18,7 @@ namespace ProgrammerApp
         public bool active;
         public bool hasSuccess;
         public int attempts;
+        public String path_to_avrdude;
 
         public USBTinyISP()
         {
@@ -28,8 +29,9 @@ namespace ProgrammerApp
             this.active = true;
             this.hasSuccess = false;
             this.attempts = 0;
+            this.path_to_avrdude = "";
         }
-        public USBTinyISP(int id)
+        public USBTinyISP(int id, String path_to_avrdude)
         {
             this.id = id;
             this.status = "";
@@ -38,15 +40,17 @@ namespace ProgrammerApp
             this.active = true;
             this.hasSuccess = false;
             this.attempts = 0;
+            this.path_to_avrdude = "\"" + path_to_avrdude + "\"";
         }
 
         public void performBat(String target, String args)
         {
            
             target = target.Replace(@" ", "\" \"");
-            String path_to_avrdude = target + "\\..\\..\\tools\\avr\\bin\\";
-            String command = "/c " + target + " " + args + " " + path_to_avrdude;
-            Console.WriteLine("Running: " + command);
+            //String path_to_avrdude = //target + "\\..\\..\\tools\\avr\\bin\\";
+            String command = "/c " + target + " " + args + " " + this.path_to_avrdude;
+            //Console.WriteLine("Path is " + path_to_avrdude);
+            //Console.WriteLine("Running: " + command);
             System.Diagnostics.ProcessStartInfo processInfo = new System.Diagnostics.ProcessStartInfo("cmd.exe", command);
             processInfo.CreateNoWindow = true;
             processInfo.UseShellExecute = false;
@@ -60,15 +64,20 @@ namespace ProgrammerApp
             string output = process.StandardOutput.ReadToEnd();
             string error = process.StandardError.ReadToEnd();
 
-            //Console.WriteLine("Output: {0}", output);
-            //Console.WriteLine("Error: {0}", error);
+            ////Console.WriteLine("Output: {0}", output);
+            ////Console.WriteLine("Error: {0}", error);
 
             process.WaitForExit();
         }
 
         public bool connected()
         {
-            Console.WriteLine("{0}> check", this.id);
+            if(!this.active)
+            {
+                this.message = "Inactive";
+                return false;
+            }
+            //Console.WriteLine("{0}> check", this.id);
             String root = System.IO.Directory.GetCurrentDirectory();
             String target = root + "\\batches\\check.bat";
             String args = String.Format("{0}", this.id);
@@ -101,18 +110,18 @@ namespace ProgrammerApp
                     else
                     {
                         this.message = "File Error: Could not open";
-                        Console.WriteLine(this.message);
+                        //Console.WriteLine(this.message);
                     }
                 }
                 else
                 {
                     this.message = "File Error: Timed out";
-                    Console.WriteLine(this.message);
+                    //Console.WriteLine(this.message);
                 }
                 task.Dispose();
                 
 
-                Console.WriteLine("Contents of WriteText.txt = {0}", text);
+                //Console.WriteLine("Contents of WriteText.txt = {0}", text);
                 if (text.IndexOf("Error") != -1)
                 {
                     this.message = "Programmer not found.";
@@ -154,7 +163,7 @@ namespace ProgrammerApp
 
             this.performBat(target, args);
 
-            Console.WriteLine("Core results path:" + path);
+            //Console.WriteLine("Core results path:" + path);
 
             if (File.Exists(path))
             {
@@ -164,7 +173,7 @@ namespace ProgrammerApp
                     if (task.Result)
                     {
                         string text = System.IO.File.ReadAllText(path);
-                        Console.WriteLine("Core Results: " + text);
+                        //Console.WriteLine("Core Results: " + text);
                         if (text.IndexOf("initialization failed, rc=-1") != -1)
                         {
                             this.message = "Board not found.";
@@ -185,7 +194,7 @@ namespace ProgrammerApp
             }
             else
             {
-                Console.WriteLine("Results not Found*");
+                //Console.WriteLine("Results not Found*");
             }
             this.hasSuccess = false;
             return false;

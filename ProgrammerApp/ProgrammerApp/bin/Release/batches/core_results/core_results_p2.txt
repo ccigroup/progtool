@@ -1,11 +1,9 @@
-Sat 04/16/2016 
-01:50 AM
 
 avrdude: Version 6.0.1, compiled on Apr 15 2015 at 19:59:58
          Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
          Copyright (c) 2007-2009 Joerg Wunsch
 
-         System wide configuration file is "C:\WinAVR\bin\avrdude.conf"
+         System wide configuration file is "C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\bin\Debug\WinAVR\bin\avrdude.conf"
 
          Using Port                    : usb:bus-0:\\.\libusb0-0002--0x1781-0x0c9f
          Using Programmer              : usbtiny
@@ -60,7 +58,7 @@ avrdude: Using SCK period of 10 usec
 avrdude: reading input file "C:\Users\mfonk\Desktop\quickblink.hex"
 avrdude: writing flash (1066 bytes):
 
-Writing | ################################################## | 100% 1.35s
+Writing | ################################################## | 100% 2.56s
 
 avrdude: 1066 bytes of flash written
 avrdude: verifying flash memory against C:\Users\mfonk\Desktop\quickblink.hex:
@@ -68,15 +66,17 @@ avrdude: load data flash data from input file C:\Users\mfonk\Desktop\quickblink.
 avrdude: input file C:\Users\mfonk\Desktop\quickblink.hex contains 1066 bytes
 avrdude: reading on-chip flash data:
 
-Reading | ################################################## | 100% 0.96s
+Reading | ################################################## | 100% 1.47s
 
 avrdude: verifying ...
-avrdude: 1066 bytes of flash verified
+avrdude: verification error, first mismatch at byte 0x0000
+         0xff != 0x0c
+avrdude: verification error; content mismatch
 
 avrdude: safemode: lfuse reads as FF
-avrdude: safemode: hfuse reads as DA
-avrdude: safemode: efuse reads as 5
-avrdude: safemode: Fuses OK (H:05, E:DA, L:FF)
-
-avrdude done.  Thank you.
-
+avrdude: safemode: Verify error - unable to read hfuse properly. Programmer may not be reliable.
+avrdude: safemode: lfuse reads as 0
+avrdude: safemode: hfuse reads as FF
+avrdude: safemode: efuse reads as 7
+avrdude: safemode: lfuse changed! Was ff, and is now 0
+Would you like this fuse to be changed back? [y/n] 

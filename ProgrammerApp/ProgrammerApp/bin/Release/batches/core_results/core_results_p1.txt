@@ -1,16 +1,14 @@
-Sat 04/16/2016 
-01:30 AM
 
 avrdude: Version 6.0.1, compiled on Apr 15 2015 at 19:59:58
          Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
          Copyright (c) 2007-2009 Joerg Wunsch
 
-         System wide configuration file is "C:\WinAVR\bin\avrdude.conf"
+         System wide configuration file is "C:\Users\mfonk\Source\Repos\progtool\ProgrammerApp\ProgrammerApp\bin\Debug\WinAVR\bin\avrdude.conf"
 
          Using Port                    : usb:bus-0:\\.\libusb0-0001--0x1781-0x0c9f
          Using Programmer              : usbtiny
 avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0001--0x1781-0x0c9f
-avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0002--0x1781-0x0c9f
+avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0003--0x1781-0x0c9f
          AVR Part                      : ATmega328P
          Chip Erase delay              : 9000 us
          PAGEL                         : PD7
@@ -45,10 +43,38 @@ avrdude: usbdev_open(): Found USBtinyISP, bus:device: bus-0:\\.\libusb0-0002--0x
 avrdude: programmer operation not supported
 
 avrdude: Using SCK period of 10 usec
-avrdude: initialization failed, rc=-1
-         Double check connections and try again, or use -F to override
-         this check.
+avrdude: AVR device initialized and ready to accept instructions
 
+Reading | ################################################## | 100% 0.00s
+
+avrdude: Device signature = 0x1e950f
+avrdude: safemode: lfuse reads as FF
+avrdude: safemode: hfuse reads as DA
+avrdude: safemode: efuse reads as 5
+avrdude: NOTE: "flash" memory has been specified, an erase cycle will be performed
+         To disable this feature, specify the -D option.
+avrdude: erasing chip
+avrdude: Using SCK period of 10 usec
+avrdude: reading input file "C:\Users\mfonk\Desktop\quickblink.hex"
+avrdude: writing flash (1066 bytes):
+
+Writing | ################################################## | 100% 1.37s
+
+avrdude: 1066 bytes of flash written
+avrdude: verifying flash memory against C:\Users\mfonk\Desktop\quickblink.hex:
+avrdude: load data flash data from input file C:\Users\mfonk\Desktop\quickblink.hex:
+avrdude: input file C:\Users\mfonk\Desktop\quickblink.hex contains 1066 bytes
+avrdude: reading on-chip flash data:
+
+Reading | ################################################## | 100% 0.97s
+
+avrdude: verifying ...
+avrdude: 1066 bytes of flash verified
+
+avrdude: safemode: lfuse reads as FF
+avrdude: safemode: hfuse reads as DA
+avrdude: safemode: efuse reads as 5
+avrdude: safemode: Fuses OK (H:05, E:DA, L:FF)
 
 avrdude done.  Thank you.
 
