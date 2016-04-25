@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html class="no-js" lang="en">
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>CCI | Help</title>
-        <link rel="stylesheet" href="http://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
+        <link rel="stylesheet" href="foundation.css">
             </head>
     <body>
         
@@ -27,8 +27,10 @@
                 <h2>Index</h2>
                 <ul>
                     <li><a href="#upload_hex">Uploading</a></li>
-                    <li><a href="#hex_select">Selecting Hex</a></li>
+                    <li><a href="#upload_error">Upload Error</a></li>
                     <li><a href="#prog_connect">Connecting Programmers</a></li>
+                    <li><a href="#hex_select">Selecting Hex</a></li>
+                    <li><a href="#locate_driver">Locating Programmer Driver</a></li>
                 </ul>
             </div>
         </div>
@@ -36,54 +38,80 @@
         <div class="row medium-8 large-7 columns" style="float: center; position: relative; width: 60%;">
             <div class="blog-post" id="upload_hex">
                 <h3>Uploading</h3>
-                <img class="thumbnail" src="http://placehold.it/850x350">
-                    <p>Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu ullamcorper orci. Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus.</p>
-                    <div class="callout">
+                <div >
+                    <ul style="">
+                        <li style="display:inline; width:30%;"><img class="thumbnail" src="./images/normal_pr.png" style="float:right; width:30%;"></li>
+                        <li style="display:inline; width:60%;"><p class="column" style="width:70%; float:left;">Uploading is performed completely by simply pressing upload. For successful upload, each programmer needs to be connected to a board via the ribbon cable.</p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                 <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
                         <ul class="menu simple">
-                            <li><a href="#">Author: Mike Mikers</a></li>
                             <li><a href="#top_of_page">Back to Top</a></li>
                         </ul>
-                    </div>
-                    </div>
-            <div class="blog-post" id="hex_select">
-                <h3>Selecting Hex</h3>
-                <img class="thumbnail" src="http://placehold.it/850x350">
-                    <p>Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu ullamcorper orci. Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus.</p>
-                    <div class="callout">
-                        <ul class="menu simple">
-                            <li><a href="#">Author: Mike Mikers</a></li>
-                            <li><a href="#top_of_page">Back to Top</a></li>
-                        </ul>
-                    </div>
-                    </div>
+                 </div>
+           </div>
+
+            <div class="blog-post" id="upload_error">
+                <h3>Uploading Error</h3>
+                <div>
+                    <ul style="">
+                        <li style="display:inline;"><img class="thumbnail" src="./images/error_pr.png" style="float:right; width:30%;"></li>
+                        <li style="display:inline;"><p class="column" style="width:70%; float:left;">The uploading process performs up to 5 attempts if an error occurs. The programmer status will display red with with the first failure and change if successful. If all 5 attempts fail, check connections. If the failure continues, the board is most likely faulty.</p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
+                    <ul class="menu simple">
+                        <li><a href="#top_of_page">Back to Top</a></li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="blog-post" id="prog_connect">
                 <h3>Connecting Programmers</h3>
-                <img class="thumbnail" src="http://placehold.it/850x350">
-                    <p>Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu ullamcorper orci. Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus.</p>
-                    <div class="callout">
-                        <ul class="menu simple">
-                            <li><a href="#">Author: Mike Mikers</a></li>
-                            <li><a href="#top_of_page">Back to Top</a></li>
-                        </ul>
-                    </div>
-                    </div>
-            <div class="blog-post">
-                <h3>Awesome blog post title <small>3/6/2015</small></h3>
-                <img class="thumbnail" src="http://placehold.it/850x350">
-                    <p>Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu ullamcorper orci. Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus.</p>
-                    <div class="callout">
-                        <ul class="menu simple">
-                            <li><a href="#">Author: Mike Mikers</a></li>
-                            <li><a href="#">Comments: 3</a></li>
-                        </ul>
-                    </div>
-                    </div>
+                <div>
+                    <ul style="">
+                        <li style="display:inline;"><img class="thumbnail" src="./images/error_no_pr.png" style="float:right; width:30%;"></li>
+                        <li style="display:inline;"><p class="column" style="width:70%; float:left;">USB Programmers should connect automatically and list at the bottom of the application. If programmers are connected and do not appear, click "Refresh". If the problem persists, attempt to re-locate the <a href="#locate_driver">programmer driver</a></li></p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
+                    <ul class="menu simple">
+                        <li><a href="#top_of_page">Back to Top</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="blog-post" id="hex_select">
+                <h3>Selecting Hex</h3>
+                <div>
+                    <ul style="">
+                        <li style="display:inline;"><img class="thumbnail" src="./images/locating_hex.png" style="float:right; width:50%;"></li>
+                        <li style="display:inline;"><p class="column" style="width:50%; float:left;">The programming process uploads the source code required for each board as a ".hex" file. In order to locate the correct ".hex" file, click "Locate Hex", navigate to the desired ".hex" and click "Open".</p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
+                    <ul class="menu simple">
+                        <li><a href="#top_of_page">Back to Top</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="blog-post" id="locate_driver">
+                <h3>Locating Programmer Driver</h3>
+                <div>
+                    <ul style="">
+                        <li style="display:inline;"><img class="thumbnail" src="./images/locating_driver.png" style="float:right; width:30%;"></li>
+                        <li style="display:inline;"><p class="column" style="width:70%; float:left;">If the application is not recognizing connected programmers, click "Locate Driver" and navigate to a valid "avrdude.exe" type driver file.</p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
+                    <ul class="menu simple">
+                        <li><a href="#top_of_page">Back to Top</a></li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
-        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="http://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.js"></script>
-        <script>
-            $(document).foundation();
-            </script>
     </body>
 </html>
 
