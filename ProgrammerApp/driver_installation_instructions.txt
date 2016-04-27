@@ -1,0 +1,14 @@
+Driver Installation:
+ Tutorial from sparkfun: https://learn.sparkfun.com/tutorials/pocket-avr-programmer-hookup-guide?_ga=1.48951974.1899166093.1459004687
+
+Method 1) 
+ 1. Download Zadig: https://cdn.sparkfun.com/assets/learn_tutorials/2/1/4/zadig_v2.0.1.160.zip
+ 2. Launch zadig.exe
+ 3. Select "libusb-win32 (v1.2.6.0)" as "Target Driver" (two clicks down)
+ 4. Click "Install WCID Driver"
+
+Method 2)
+ 1. Download USBTiny Drivers: https://cdn.sparkfun.com/assets/learn_tutorials/2/1/4/usbtinyisp_libusb-win32_1.2.1.0.zip
+ 2. Find programmer in "Device Manager", it will be unknown
+ 3. Right click and "Update Driver Software"
+ 4. Click “Browse…” and navigate to the “../usbtinyisp_libusb-win32_1.2.1.0” 

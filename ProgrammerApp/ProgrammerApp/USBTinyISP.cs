@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
 using System.IO;
 
 namespace ProgrammerApp
 {
-    //enum 
     public class USBTinyISP
     {
         public int id;
-        public String status;
         public String message;
         public bool hasBoard;
         public bool active;
@@ -20,21 +14,9 @@ namespace ProgrammerApp
         public int attempts;
         public String path_to_avrdude;
 
-        public USBTinyISP()
-        {
-            this.id = 0;
-            this.status = "";
-            this.message = "";
-            this.hasBoard = false;
-            this.active = true;
-            this.hasSuccess = false;
-            this.attempts = 0;
-            this.path_to_avrdude = "";
-        }
         public USBTinyISP(int id, String path_to_avrdude)
         {
             this.id = id;
-            this.status = "";
             this.message = "";
             this.hasBoard = false;
             this.active = true;
@@ -47,7 +29,6 @@ namespace ProgrammerApp
         {
            
             target = target.Replace(@" ", "\" \"");
-            //String path_to_avrdude = //target + "\\..\\..\\tools\\avr\\bin\\";
             String command = "/c " + target + " " + args + " " + this.path_to_avrdude;
             //Console.WriteLine("Path is " + path_to_avrdude);
             //Console.WriteLine("Running: " + command);
@@ -60,9 +41,6 @@ namespace ProgrammerApp
             System.Diagnostics.Process process = System.Diagnostics.Process.Start(processInfo);
 
             process.Start();
-
-            string output = process.StandardOutput.ReadToEnd();
-            string error = process.StandardError.ReadToEnd();
 
             ////Console.WriteLine("Output: {0}", output);
             ////Console.WriteLine("Error: {0}", error);
@@ -118,8 +96,7 @@ namespace ProgrammerApp
                     this.message = "File Error: Timed out";
                     //Console.WriteLine(this.message);
                 }
-                task.Dispose();
-                
+                task.Dispose(); 
 
                 //Console.WriteLine("Contents of WriteText.txt = {0}", text);
                 if (text.IndexOf("Error") != -1)
@@ -199,7 +176,6 @@ namespace ProgrammerApp
             this.hasSuccess = false;
             return false;
         }
-
 
         public bool WaitForFile(String path)
         {

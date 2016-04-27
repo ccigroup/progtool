@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
@@ -16,7 +12,6 @@ namespace ProgrammerApp
     public partial class MainForm : Form
     {
         public static BackgroundWorker uploadWorker;
-
         public string path_to_hex = "";
         public string path_to_avrdude = "";
         public static int num_of_progs = 0;
@@ -24,7 +19,6 @@ namespace ProgrammerApp
         public static Label[] prog_labels;
         public static RichTextBox[] prog_textBoxes;
         public static ToolStripMenuItem[] prog_menuitems;
-        public static System.Windows.Forms.Timer progressTimer = new System.Windows.Forms.Timer();
 
         public MainForm()
         {
@@ -112,8 +106,6 @@ namespace ProgrammerApp
                             
                         }
                         else {
-                            //deviceToolStripMenuItem.DropDownItems.Remove(refreshMenuItem);
-
                             progs = new USBTinyISP[num_of_progs];
                             prog_labels = new Label[num_of_progs];
                             prog_textBoxes = new RichTextBox[num_of_progs];
@@ -121,48 +113,44 @@ namespace ProgrammerApp
 
                             for (int i = 0; i < num_of_progs; i++)
                             {
-                                //Thread checkerThread = new Thread(new ThreadStart(() =>
+                                button1.Text = "Program";
+                                toolStripMenuItem2.Enabled = true;
+                                int index = text.IndexOf("Found USBtinyISP");
+                                //Console.WriteLine("Index is {0}", index);
+                                int id = 0;
+                                if (index < 0) id = i;
+                                else
                                 {
-                                    button1.Text = "Program";
-                                    toolStripMenuItem2.Enabled = true;
-                                    int index = text.IndexOf("Found USBtinyISP");
-                                    //Console.WriteLine("Index is {0}", index);
-                                    int id = 0;
-                                    if (index < 0) id = i;
+                                    text = text.Substring(index+48);
+                                    //Console.WriteLine("Parsed text is \n {0}", text);
+                                    id  = Int32.Parse(text.Substring(0, 4));
+                                }
+                                //Console.WriteLine("id is {0}", id);
+
+                                addProgrammer(i, id);
+
+                                if (progs[i].active)
+                                {
+                                    if (progs[i].connected())
+                                    {
+                                        prog_textBoxes[i].Invoke((MethodInvoker)(() =>
+                                        {
+                                            prog_textBoxes[i].ForeColor = Color.White;
+                                            prog_textBoxes[i].BackColor = Color.DarkCyan;
+                                            prog_textBoxes[i].Text = progs[i].message;
+                                                
+                                        }));
+                                    }
                                     else
                                     {
-                                        text = text.Substring(index+48);
-                                        //Console.WriteLine("Parsed text is \n {0}", text);
-                                        id  = Int32.Parse(text.Substring(0, 4));
-                                    }
-                                    //Console.WriteLine("id is {0}", id);
-
-                                    addProgrammer(i, id);
-
-                                    if (progs[i].active)
-                                    {
-                                        if (progs[i].connected())
+                                        prog_textBoxes[i].Invoke((MethodInvoker)(() =>
                                         {
-                                            prog_textBoxes[i].Invoke((MethodInvoker)(() =>
-                                            {
-                                                prog_textBoxes[i].ForeColor = Color.White;
-                                                prog_textBoxes[i].BackColor = Color.DarkCyan;
+                                            prog_textBoxes[i].ForeColor = Color.White;
+                                            prog_textBoxes[i].BackColor = Color.Firebrick;
                                                 prog_textBoxes[i].Text = progs[i].message;
-                                                
-                                            }));
-                                        }
-                                        else
-                                        {
-                                            prog_textBoxes[i].Invoke((MethodInvoker)(() =>
-                                            {
-                                                prog_textBoxes[i].ForeColor = Color.White;
-                                                prog_textBoxes[i].BackColor = Color.Firebrick;
-                                                 prog_textBoxes[i].Text = progs[i].message;
-                                            }));
-                                        }
+                                        }));
                                     }
-                                }//));
-                                //checkerThread.Start();
+                                }
                             }
                         }
                     }
@@ -217,11 +205,6 @@ namespace ProgrammerApp
                     prog_textBoxes[i].BackColor = Color.LightGray;
                     prog_textBoxes[i].Text = "Inactive";
                 }
-                else
-                {
-                    //connectProgs();
-                }
-
             });
             deviceToolStripMenuItem.DropDownItems.Add(prog_menuitems[i]);
         }
@@ -241,7 +224,6 @@ namespace ProgrammerApp
                 }
             }
         }
-
 
         private void progressWork(object sender, DoWorkEventArgs e)
         {
@@ -359,25 +341,9 @@ namespace ProgrammerApp
         }
 
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-
         private void exitStripMenuItem1_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void message(String text)
@@ -405,11 +371,6 @@ namespace ProgrammerApp
             String path = root + "\\srcs\\help.html";
             //Console.WriteLine(path);
             System.Diagnostics.Process.Start(path);
-        }
-
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)

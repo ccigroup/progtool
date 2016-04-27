@@ -117,7 +117,6 @@
             this.richTextBox1.Size = new System.Drawing.Size(431, 250);
             this.richTextBox1.TabIndex = 8;
             this.richTextBox1.Text = "";
-            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // menuStrip1
             // 
@@ -243,7 +242,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // openFileDialog2
             // 
