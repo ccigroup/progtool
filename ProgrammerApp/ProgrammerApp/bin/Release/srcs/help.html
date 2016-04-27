@@ -1,0 +1,117 @@
+﻿<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>CCI | Help</title>
+        <link rel="stylesheet" href="foundation.css">
+            </head>
+    <body>
+        
+        <div class="top-bar" id="top_of_page">
+            <div class="top-bar-left">
+                <ul class="menu">
+                    <li class="menu-text">CCI Group</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="callout large primary">
+            <div class="row column text-center">
+                <h2 class="subheader">Programmer Tool Help</h2>
+            </div>
+        </div>
+        
+        <div class="index column" style="float: left; position: fixed; width: 20%;">
+            <div class="row column text-left">
+                <h2>Index</h2>
+                <ul>
+                    <li><a href="#upload_hex">Uploading</a></li>
+                    <li><a href="#upload_error">Upload Error</a></li>
+                    <li><a href="#prog_connect">Connecting Programmers</a></li>
+                    <li><a href="#hex_select">Selecting Hex</a></li>
+                    <li><a href="#locate_driver">Locating Programmer Driver</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="row medium-8 large-7 columns" style="float: center; position: relative; width: 60%;">
+            <div class="blog-post" id="upload_hex">
+                <h3>Uploading</h3>
+                <div >
+                    <ul style="">
+                        <li style="display:inline; width:30%;"><img class="thumbnail" src="./images/normal_pr.png" style="float:right; width:30%;"></li>
+                        <li style="display:inline; width:60%;"><p class="column" style="width:70%; float:left;">Uploading is performed completely by simply pressing upload. For successful upload, each programmer needs to be connected to a board via the ribbon cable.</p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                 <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
+                        <ul class="menu simple">
+                            <li><a href="#top_of_page">Back to Top</a></li>
+                        </ul>
+                 </div>
+           </div>
+
+            <div class="blog-post" id="upload_error">
+                <h3>Uploading Error</h3>
+                <div>
+                    <ul style="">
+                        <li style="display:inline;"><img class="thumbnail" src="./images/error_pr.png" style="float:right; width:30%;"></li>
+                        <li style="display:inline;"><p class="column" style="width:70%; float:left;">The uploading process performs up to 5 attempts if an error occurs. The programmer status will display red with with the first failure and change if successful. If all 5 attempts fail, check connections. If the failure continues, the board is most likely faulty.</p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
+                    <ul class="menu simple">
+                        <li><a href="#top_of_page">Back to Top</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="blog-post" id="prog_connect">
+                <h3>Connecting Programmers</h3>
+                <div>
+                    <ul style="">
+                        <li style="display:inline;"><img class="thumbnail" src="./images/error_no_pr.png" style="float:right; width:30%;"></li>
+                        <li style="display:inline;"><p class="column" style="width:70%; float:left;">USB Programmers should connect automatically and list at the bottom of the application. If programmers are connected and do not appear, click "Refresh". If the problem persists, attempt to re-locate the <a href="#locate_driver">programmer driver</a></li></p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
+                    <ul class="menu simple">
+                        <li><a href="#top_of_page">Back to Top</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="blog-post" id="hex_select">
+                <h3>Selecting Hex</h3>
+                <div>
+                    <ul style="">
+                        <li style="display:inline;"><img class="thumbnail" src="./images/locating_hex.png" style="float:right; width:50%;"></li>
+                        <li style="display:inline;"><p class="column" style="width:50%; float:left;">The programming process uploads the source code required for each board as a ".hex" file. In order to locate the correct ".hex" file, click "Locate Hex", navigate to the desired ".hex" and click "Open".</p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
+                    <ul class="menu simple">
+                        <li><a href="#top_of_page">Back to Top</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="blog-post" id="locate_driver">
+                <h3>Locating Programmer Driver</h3>
+                <div>
+                    <ul style="">
+                        <li style="display:inline;"><img class="thumbnail" src="./images/locating_driver.png" style="float:right; width:30%;"></li>
+                        <li style="display:inline;"><p class="column" style="width:70%; float:left;">If the application is not recognizing connected programmers, click "Locate Driver" and navigate to a valid "avrdude.exe" type driver file.</p></listyle="display:inline-block">
+                    </ul>
+                </div>
+                <div class="row" style="border-color:aqua; border-width:1px; width:100%;">
+                    <ul class="menu simple">
+                        <li><a href="#top_of_page">Back to Top</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>
+

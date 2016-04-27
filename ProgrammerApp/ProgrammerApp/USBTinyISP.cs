@@ -84,7 +84,7 @@ namespace ProgrammerApp
             string path = root + String.Format("\\batches\\check_results\\check_results_p{0}.txt", this.id);
             var task = Task.Run(() => WaitForFile(path));
             string text = "";
-            if (task.Wait(TimeSpan.FromSeconds(5)))
+            if (task.Wait(TimeSpan.FromSeconds(10)))
             {
                 if (task.Result)
                 {
@@ -101,7 +101,7 @@ namespace ProgrammerApp
             else {
                 task = Task.Run(() => WaitForFile(path));
                 text = "";
-                if (task.Wait(TimeSpan.FromSeconds(5)))
+                if (task.Wait(TimeSpan.FromSeconds(10)))
                 {
                     if (task.Result)
                     {
@@ -153,7 +153,7 @@ namespace ProgrammerApp
             String args = String.Format("{0} {1}", this.id, path_to_hex);
             string path = root + String.Format("\\batches\\core_results\\core_results_p{0}.txt", this.id);
             var task = Task.Run(() => WaitForFile(path));
-            if (task.Wait(TimeSpan.FromSeconds(5)))
+            if (task.Wait(TimeSpan.FromSeconds(10)))
             {
                 if (task.Result)
                 {
@@ -168,7 +168,7 @@ namespace ProgrammerApp
             if (File.Exists(path))
             {
                 task = Task.Run(() => WaitForFile(path));
-                if (task.Wait(TimeSpan.FromSeconds(5)))
+                if (task.Wait(TimeSpan.FromSeconds(60)))
                 {
                     if (task.Result)
                     {
@@ -205,8 +205,6 @@ namespace ProgrammerApp
         {
             while (true)
             {
-                // If the file can be opened for exclusive access it means that the file
-                // is no longer locked by another process.
                 try
                 {
                     using (FileStream inputStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None))

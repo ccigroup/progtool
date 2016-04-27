@@ -54,22 +54,23 @@ namespace ProgrammerApp
             //Console.WriteLine("Path length " + path_to_avrdude.Length);
             if (path_to_avrdude.Length == 0)
             {
-                hexToolStripMenuItem_Click(this, null);
+                toolStripMenuItem4_Click(this, null);
             }
             //Console.WriteLine("Avdude path is " + path_to_avrdude);
 
             path = System.IO.Directory.GetCurrentDirectory() + "\\batches\\hex_path.txt";
+            Console.WriteLine("Hex path is " + path);
             if (!File.Exists(path))
             {
                 File.WriteAllText(path, String.Empty);
             }
             path_to_hex = File.ReadAllText(path);
-            //Console.WriteLine("Path length " + path_to_hex.Length);
+            Console.WriteLine("Path length " + path_to_hex.Length);
             if (path_to_hex.Length == 0)
             {
                 hexToolStripMenuItem_Click(this, null);
             }
-            //Console.WriteLine("Hex path is " + path_to_hex);
+            Console.WriteLine("Hex path is " + path_to_hex);
 
             connectProgs();
             message(String.Format("{0} programmers connected.", num_of_progs));
